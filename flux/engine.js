@@ -1,5 +1,6 @@
 define(function(require) {
     var Keyboard = require('./input/keyboard.js');
+    var DefaultWorld = require('./worlds/default.js');
 
     var requestFrame = (function() {
         return window.mozRequestAnimationFrame ||
@@ -21,6 +22,8 @@ define(function(require) {
 
         // Engine State
         this.running = false;
+        this.worlds = [];
+        this.pushWorld(new DefaultWorld());
 
         // Bind the engine to the loop function used as a callback
         // in request frame.
@@ -39,7 +42,7 @@ define(function(require) {
         this.removes = [];
     }
 
-    _.extend(Engine.prototype, {
+    Engine.prototype = {
         // Process and render a single frame, and schedule another loop
         // for the next frame.
         loop: function() {
@@ -65,19 +68,30 @@ define(function(require) {
 
         // Process one frame of behavior.
         tick: function() {
-            this.entities.forEach(function(entity) {
-                entity.tick();
-            });
+            for (var k = 0; k < this.worlds.length; k++) {
+                this.worlds[k].tick();
+                if (this.worlds[k].block_tick) break;
+            }
             this.kb.tick();
         },
 
         // Render the screen.
         render: function() {
-            var self = this;
+            for (var k = 0; k < this.worlds.length; k++) {
+                this.worlds[k].render(this.ctx);
+                if (this.worlds[k].block_render) break;
+            }
+            this.world.render(this.ctx);
+        },
 
-            this.entities.forEach(function(entity) {
-                entity.render(self.ctx);
-            });
+        pushWorld: function(world, block_tick, block_render) {
+            this.worlds.push(world);
+            if (block_tick !== undefined) world.block_tick = block_tick;
+            if (block_render !== undefined) world.block_render = block_render;
+        },
+
+        popWorld: function(world) {
+            return this.worlds.pop();
         },
 
         addEntity: function(entity) {
@@ -99,7 +113,7 @@ define(function(require) {
         stop: function() {
             this.running = false;
         }
-    });
+    };
 
     return Engine;
 });
