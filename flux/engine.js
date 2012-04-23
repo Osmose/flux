@@ -1,6 +1,6 @@
 define(function(require) {
-    var Keyboard = require('./input/keyboard.js');
-    var DefaultWorld = require('./worlds/default.js');
+    var Keyboard = require('./input/keyboard');
+    var DefaultWorld = require('./worlds/default');
 
     var requestFrame = (function() {
         return window.mozRequestAnimationFrame ||
@@ -81,17 +81,19 @@ define(function(require) {
                 this.worlds[k].render(this.ctx);
                 if (this.worlds[k].block_render) break;
             }
-            this.world.render(this.ctx);
         },
 
         pushWorld: function(world, block_tick, block_render) {
             this.worlds.push(world);
+            world.engine = this;
             if (block_tick !== undefined) world.block_tick = block_tick;
             if (block_render !== undefined) world.block_render = block_render;
         },
 
-        popWorld: function(world) {
-            return this.worlds.pop();
+        popWorld: function() {
+            var world = this.worlds.pop();
+            world.engine = null;
+            return world;
         },
 
         addEntity: function(entity) {
