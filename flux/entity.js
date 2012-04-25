@@ -73,6 +73,8 @@ define(function(require) {
 
         // Check for collision against a specific entity.
         collideEntity: function(entity, dx, dy) {
+            if (!entity.collidable) return false;
+
             var myLeft = this.x + dx + this.hitbox.x;
             var myTop = this.y + dy + this.hitbox.y;
             var myRight = myLeft + this.hitbox.width;
