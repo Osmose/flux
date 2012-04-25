@@ -14,10 +14,15 @@ define(function(require) {
     // Handles the game loop, timing, and dispatching processing and rendering
     // to the active entities.
     function Engine(width, height, scale) {
+        var self = this;
+
+        // Graphics
         this.width = width;
         this.height = height;
         this.scale = scale;
+        this.bg_color = '#FFF';
 
+        // Input
         this.kb = new Keyboard();
 
         // Engine State
@@ -37,9 +42,14 @@ define(function(require) {
         this.ctx.scale(this.scale, this.scale);
         this.ctx.mozImageSmoothingEnabled = false;
 
-        // Entity management.
-        this.entities = [];
-        this.removes = [];
+        // Bind focus and blur handlers to pause when not in focus.
+        // TODO: Proper pausing.
+        window.addEventListener('focus', function() {
+            self.start();
+        }, false);
+        window.addEventListener('blur', function() {
+            self.stop();
+        }, false);
     }
 
     Engine.prototype = {
@@ -49,17 +59,6 @@ define(function(require) {
             var self = this;
             this.tick();
             this.render();
-
-            // Remove entities that have been marked for removal.
-            this.entities = this.entities.filter(function(entity) {
-                if (entity.id in self.removes) {
-                    delete entity.engine;
-                    return false;
-                } else {
-                    return true;
-                }
-            });
-            this.removes = {};
 
             if (this.running) {
                 requestFrame(this.bound_loop, this.canvas);
@@ -77,6 +76,11 @@ define(function(require) {
 
         // Render the screen.
         render: function() {
+            this.ctx.save();
+            this.ctx.fillStyle = this.bg_color;
+            this.ctx.fillRect(0, 0, this.width, this.height);
+            this.ctx.restore();
+
             for (var k = 0; k < this.worlds.length; k++) {
                 this.worlds[k].render(this.ctx);
                 if (this.worlds[k].block_render) break;
@@ -96,13 +100,16 @@ define(function(require) {
             return world;
         },
 
+        get world() {
+            return this.worlds[this.worlds.length - 1];
+        },
+
         addEntity: function(entity) {
-            entity.engine = this;
-            this.entities.push(entity);
+            this.world.addEntity(entity);
         },
 
         removeEntity: function(entity) {
-            this.removes.push(entity.id);
+            this.world.removeEntity(entity);
         },
 
         // Start the game loop.

@@ -25,6 +25,17 @@ define(function(require) {
         window.addEventListener('keyup', function(e) {
             setKey(e.keyCode, false);
         });
+
+        this.LEFT = 37;
+        this.UP = 38;
+        this.RIGHT = 39;
+        this.DOWN = 40;
+        this.SPACE = 32;
+
+        // Letters and numbers.
+        for (var k = 48; k < 91; k++) {
+            this[String.fromCharCode(k).toUpperCase()] = k;
+        }
     };
 
     Keyboard.prototype = {
@@ -45,19 +56,19 @@ define(function(require) {
 
         check: function(code) {
             return this._test(code, function(code) {
-                return self._keys[code];
+                return this._keys[code];
             });
         },
 
         pressed: function(code) {
             return this._test(code, function(code) {
-                return self._pressed[code];
+                return this._pressed[code];
             });
         },
 
         released: function(code) {
             return this._test(code, function(code) {
-                return self._released[code];
+                return this._released[code];
             });
         },
 
@@ -73,17 +84,6 @@ define(function(require) {
             self._pressed = {};
         }
     };
-
-    Keyboard.LEFT = 37;
-    Keyboard.UP = 38;
-    Keyboard.RIGHT = 39;
-    Keyboard.DOWN = 40;
-    Keyboard.SPACE = 32;
-
-    // Letters and numbers.
-    for (var k = 48; k < 91; k++) {
-        Keyboard[String.fromCharCode(k).toUpperCase()] = k;
-    }
 
     return Keyboard;
 });
