@@ -91,6 +91,10 @@ define(function(require) {
             if (myTop > theirBottom) return false;
 
             return true;
+        },
+
+        collide_tilemap: function(tilemap, type, dx, dy) {
+            return tilemap.collide_entity(this, type, dx, dy);
         }
     };
 

@@ -13,7 +13,7 @@ define(function(require) {
 
     // Handles the game loop, timing, and dispatching processing and rendering
     // to the active entities.
-    function Engine(width, height, scale) {
+    function Engine(width, height, scale, world) {
         var self = this;
 
         // Graphics
@@ -28,7 +28,10 @@ define(function(require) {
         // Engine State
         this.running = false;
         this.worlds = [];
-        this.pushWorld(new DefaultWorld());
+        if (world === undefined) {
+            world = new DefaultWorld();
+        }
+        this.pushWorld(world);
 
         // Bind the engine to the loop function used as a callback
         // in request frame.

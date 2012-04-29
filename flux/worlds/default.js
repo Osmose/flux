@@ -8,9 +8,6 @@ define(function(require) {
         this.entities = [];
         this.removes = [];
         this.entity_types = {};
-
-        // Tilemap management.
-        this.tilemap = null;
     }
 
     DefaultWorld.prototype = {
@@ -34,10 +31,6 @@ define(function(require) {
         },
 
         render: function(ctx) {
-            if (this.tilemap !== null) {
-                this.tilemap.render(ctx, 0, 0);
-            }
-
             this.entities.forEach(function(entity) {
                 entity.render(ctx);
             });
