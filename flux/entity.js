@@ -16,7 +16,9 @@ define(function(require) {
 
     Entity.prototype = {
         tick: function() {
-
+            if (this.graphic !== null) {
+                this.graphic.tick();
+            }
         },
 
         render: function(ctx) {

@@ -125,8 +125,10 @@ define(function(require) {
 
         // Start the game loop.
         start: function() {
-            this.running = true;
-            this.loop();
+            if (!this.running) {
+                this.running = true;
+                this.loop();
+            }
         },
 
         // Stop the game.

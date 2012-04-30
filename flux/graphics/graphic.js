@@ -11,6 +11,10 @@ define(function(require) {
     }
 
     Graphic.prototype = {
+        tick: function() {
+
+        },
+        
         render: function(ctx, x, y) {
             ctx.drawImage(this.getImage(), x, y,
                           this.width * this.scale,
