@@ -14,9 +14,14 @@ define(function(require) {
 
     Tilemap.prototype = {
         render: function(ctx, x, y) {
+            var camera = this.engine.camera;
             if (this.graphic === null) return;
             x = x || this.x;
             y = y || this.y;
+
+            // Adjust for camera.
+            x -= camera.x;
+            y -= camera.y;
 
             for (var ty = 0; ty < this.grid.length; ty++) {
                 for (var tx = 0; tx < this.grid[ty].length; tx++) {
@@ -27,7 +32,7 @@ define(function(require) {
             }
         },
 
-        collide_entity: function(entity, type, dx, dy) {
+        collideEntity: function(entity, type, dx, dy) {
             // TODO: Cache this per frame
             var tileWidth = this.graphic.tileWidth;
             var tileHeight = this.graphic.tileHeight;

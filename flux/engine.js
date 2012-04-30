@@ -45,6 +45,14 @@ define(function(require) {
         this.ctx.scale(this.scale, this.scale);
         this.ctx.mozImageSmoothingEnabled = false;
 
+        // Initialize camera.
+        this.camera = {
+            x: 0,
+            y: 0,
+            width: width,
+            height: height
+        };
+
         // Bind focus and blur handlers to pause when not in focus.
         // TODO: Proper pausing.
         window.addEventListener('focus', function() {

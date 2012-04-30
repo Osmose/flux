@@ -20,8 +20,9 @@ define(function(require) {
         },
 
         render: function(ctx) {
+            var camera = this.engine.camera;
             if (this.graphic !== null) {
-                this.graphic.render(ctx, this.x, this.y);
+                this.graphic.render(ctx, this.x - camera.x, this.y - camera.y);
             }
         },
 
@@ -93,8 +94,31 @@ define(function(require) {
             return true;
         },
 
-        collide_tilemap: function(tilemap, type, dx, dy) {
-            return tilemap.collide_entity(this, type, dx, dy);
+        collideTilemap: function(tilemap, type, dx, dy) {
+            return tilemap.collideEntity(this, type, dx, dy);
+        },
+
+        // Check if the hitbox is within the camera range.
+        withinCamera: function(dx, dy) {
+            var camera = this.engine.camera;
+
+            // TODO: Duplicated code! D:
+            var myLeft = this.x + dx + this.hitbox.x;
+            var myTop = this.y + dy + this.hitbox.y;
+            var myRight = myLeft + this.hitbox.width;
+            var myBottom = myTop + this.hitbox.height;
+
+            var cameraLeft = camera.x;
+            var cameraTop = camera.y;
+            var cameraRight = cameraLeft + camera.width;
+            var cameraBottom = cameraTop + camera.height;
+
+            if (myLeft < cameraLeft) return 'left';
+            if (myRight > cameraRight) return 'right';
+            if (myTop < cameraTop) return 'up';
+            if (myBottom > cameraBottom) return 'down';
+
+            return true;
         }
     };
 
