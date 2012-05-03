@@ -19,7 +19,7 @@ define(function(require) {
 
             // Remove entities that have been marked for removal.
             this.entities = this.entities.filter(function(entity) {
-                if (entity.id in self.removes) {
+                if (self.removes.indexOf(entity.id) !== -1) {
                     entity.engine = null;
                     entity.world = null;;
                     return false;
