@@ -75,8 +75,8 @@ define(function(require) {
         },
 
         tick: function() {
-            self._pressed = {};
-            self._released = {};
+            this._pressed = {};
+            this._released = {};
         }
     };
 
