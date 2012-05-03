@@ -7,15 +7,9 @@ define(function(require) {
         this._controls = {};
 
         function setKey(code, status) {
-            if (code) {
-                if (!self._keys[code]) {
-                    self._pressed[code] = status;
-                } else if (!status) {
-                    self._released[code] = true;
-                }
-
-                self._keys[code] = status;
-            }
+            self._pressed[code] = status;
+            self._released[code] = !status;
+            self._keys[code] = status;
         }
 
         window.addEventListener('keydown', function(e) {
@@ -82,6 +76,7 @@ define(function(require) {
 
         tick: function() {
             self._pressed = {};
+            self._released = {};
         }
     };
 
