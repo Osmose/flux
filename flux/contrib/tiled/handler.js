@@ -73,11 +73,17 @@ define(function(require) {
                 var $object = $(this);
                 var object = {
                     type: $object.attr('type'),
-                    x: $object.attr('x'),
-                    y: $object.attr('y'),
-                    width: $object.attr('width'),
-                    height: $object.attr('height')
+                    x: parseInt($object.attr('x')),
+                    y: parseInt($object.attr('y')),
+                    width: parseInt($object.attr('width')),
+                    height: parseInt($object.attr('height')),
+                    properties: {}
                 };
+
+                $object.find('properties').find('property').each(function() {
+                    var $property = $(this);
+                    object.properties[$property.attr('name')] = $property.attr('value');
+                });
 
                 object_group.objects.push(object);
             });

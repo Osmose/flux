@@ -33,6 +33,8 @@ define(function(require) {
         },
 
         collideEntity: function(entity, type, dx, dy) {
+            if (!this.solid.hasOwnProperty(type)) return false;
+
             // TODO: Cache this per frame
             var tileWidth = this.graphic.tileWidth;
             var tileHeight = this.graphic.tileHeight;

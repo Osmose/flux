@@ -74,6 +74,25 @@ define(function(require) {
             return false;
         },
 
+        // Return the first entity of the given type that this entity collides
+        // with.
+        getCollideEntity: function(type, dx, dy) {
+            var self = this;
+            var entities = this.world.entity_types[type];
+            if (entities !== undefined) {
+                for (var i in entities) {
+                    if (entities.hasOwnProperty(i)) {
+                        var entity = entities[i];
+                        if (this.collideEntity(entity, dx, dy)) {
+                            return entity;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        },
+
         // Check for collision against a specific entity.
         collideEntity: function(entity, dx, dy) {
             if (!entity.collidable) return false;

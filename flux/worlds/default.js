@@ -21,7 +21,14 @@ define(function(require) {
             this.entities = this.entities.filter(function(entity) {
                 if (self.removes.indexOf(entity.id) !== -1) {
                     entity.engine = null;
-                    entity.world = null;;
+                    entity.world = null;
+
+                    // Remove from entity-type map.
+                    var types = self.entity_types;
+                    types[entity.type] = types[entity.type].filter(function(e) {
+                        return e.id !== entity.id;
+                    });
+
                     return false;
                 } else {
                     return true;
