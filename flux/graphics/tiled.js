@@ -33,10 +33,16 @@ define(function(require) {
 
         // Advance the current animation by one frame, if applicable.
         tick: function() {
-            if (this.currentTile !== null &&
-                this.currentTile in this.animated_names) {
-                var animation = this.animated_names[this.currentTile];
-                var state = this.animated_state[this.currentTile];
+            if (this.currentTile !== null) {
+                this.incFrame(this.currentTile);
+            }
+        },
+
+        // Advance one frame in the specified animation tile.
+        incFrame: function(anim_name) {
+            if (anim_name in this.animated_names) {
+                var animation = this.animated_names[anim_name];
+                var state = this.animated_state[anim_name];
 
                 if (state.delay <= 0) {
                     state.frame += 2;
@@ -50,18 +56,23 @@ define(function(require) {
             }
         },
 
+        // Advance one frame in all animation tiles.
+        incAllFrames: function() {
+            for (var anim_name in this.animated_names) {
+                this.incFrame(anim_name);
+            }
+        },
+
         // Get the tile number corresponding to the given tile. If the
         // given tile is a name, will return the corresponding tile number.
         // If the given tile is an animation, will return the current frame.
         getTileNumber: function(tile) {
-            if (typeof tile === 'number') {
-                return tile;
-            }
-
             if (tile in this.animated_state) {
                 var state = this.animated_state[tile];
                 var animation = this.animated_names[tile];
                 return animation[state.frame];
+            } else if (typeof tile === 'number') {
+                return tile;
             }
 
             return this.names[tile];
