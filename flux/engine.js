@@ -127,6 +127,11 @@ define(function(require) {
         start: function() {
             if (!this.running) {
                 this.running = true;
+
+                if (this.world !== undefined &&
+                    this.world.start !== undefined) {
+                    this.world.start();
+                }
                 this.loop();
             }
         },
@@ -134,6 +139,9 @@ define(function(require) {
         // Stop the game.
         stop: function() {
             this.running = false;
+            if (this.world !== undefined && this.world.stop !== undefined) {
+                this.world.stop();
+            }
         }
     };
 

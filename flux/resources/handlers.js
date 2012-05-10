@@ -56,6 +56,7 @@ define(function(require, exports) {
     // Loads audio into <audio> tags.
     exports.AudioHandler = Object.create(exports.BaseHandler);
     exports.AudioHandler.load = function(url) {
+        var self = this;
         var deferred = $.Deferred();
         var audio = new Audio();
 
