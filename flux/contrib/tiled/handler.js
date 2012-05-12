@@ -13,10 +13,17 @@ define(function(require) {
         }
 
         var map = {
+            width_tiles: parseInt($map.attr('width')),
+            height_tiles: parseInt($map.attr('height')),
+            tile_width: parseInt($map.attr('tilewidth')),
+            tile_height: parseInt($map.attr('tileheight')),
             tilesets: {},
             layers: {},
             objectGroups: {}
         };
+
+        map.width_pixels = map.width_tiles * map.tile_width;
+        map.height_pixels = map.height_tiles * map.tile_height;
 
         // Load tilesets
         $map.find('tileset').each(function() {

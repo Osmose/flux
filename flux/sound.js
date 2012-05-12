@@ -44,6 +44,7 @@ define(function(require) {
          * volume increase over the duration.
          */
         fade: function(final_volume, duration, tick) {
+            var self = this;
             var deferred = $.Deferred();
 
             tick = tick || 50;
@@ -52,17 +53,18 @@ define(function(require) {
 
             var start = Date.now();
             var ramp = function() {
-                this.audio.volume = Util.restrict(this.audio.volume + dv, 1, 0);
+                self.audio.volume = Util.restrict(self.audio.volume + dv, 1, 0);
                 var elapsed = Date.now() - start;
 
                 if (elapsed > duration) {
-                    this.audio.volume = final_volume;
-                    deferred.resolveWith(this);
+                    self.audio.volume = final_volume;
+                    deferred.resolveWith(self);
                 } else {
                     setTimeout(ramp, tick);
                 }
             };
-            ramp.bind(this);
+            this.play(); // Why fade if you're not playing?
+            setTimeout(ramp, tick);
 
             return deferred;
         }

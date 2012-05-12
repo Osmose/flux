@@ -27,7 +27,7 @@ define(function(require, exports) {
      * Forces a number to be within a maximum and minimum value. Returns the
      * given number, or the max/min if it is out of bounds.
      */
-    function restrict(number, max, min) {
+    exports.restrict = function(number, max, min) {
         return Math.min(max, Math.max(min, number));
-    }
+    };
 });
