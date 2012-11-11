@@ -20,7 +20,7 @@ define(function(require) {
         this.width = width;
         this.height = height;
         this.scale = scale;
-        this.bg_color = '#FFF';
+        this.bg_color = null;
 
         // Input
         this.kb = new Keyboard();
@@ -88,8 +88,11 @@ define(function(require) {
         // Render the screen.
         render: function() {
             this.ctx.save();
-            this.ctx.fillStyle = this.bg_color;
-            this.ctx.fillRect(0, 0, this.width, this.height);
+            this.ctx.clearRect(0, 0, this.width, this.height);
+            if (this.bg_color) {
+                this.ctx.fillStyle = this.bg_color;
+                this.ctx.fillRect(0, 0, this.width, this.height);
+            }
             this.ctx.restore();
 
             for (var k = 0; k < this.worlds.length; k++) {
