@@ -78,7 +78,7 @@ define(function(require) {
 
         // Process one frame of behavior.
         tick: function() {
-            for (var k = 0; k < this.worlds.length; k++) {
+            for (var k = this.worlds.length - 1; k >= 0; k--) {
                 this.worlds[k].tick();
                 if (this.worlds[k].block_tick) break;
             }
@@ -102,14 +102,14 @@ define(function(require) {
         },
 
         pushWorld: function(world, block_tick, block_render) {
-            this.worlds.unshift(world);
+            this.worlds.push(world);
             world.engine = this;
             if (block_tick !== undefined) world.block_tick = block_tick;
             if (block_render !== undefined) world.block_render = block_render;
         },
 
         popWorld: function() {
-            var world = this.worlds.shift();
+            var world = this.worlds.pop();
             world.engine = null;
             return world;
         },
@@ -131,10 +131,9 @@ define(function(require) {
             if (!this.running) {
                 this.running = true;
 
-                for (var k = 0; k < this.worlds.length; k++) {
-                    if (this.worlds[k].start !== undefined) {
-                        this.worlds[k].start();
-                    }
+                if (this.world !== undefined &&
+                    this.world.start !== undefined) {
+                    this.world.start();
                 }
                 this.loop();
             }
@@ -143,10 +142,8 @@ define(function(require) {
         // Stop the game.
         stop: function() {
             this.running = false;
-            for (var k = 0; k < this.worlds.length; k++) {
-                if (this.worlds[k].stop !== undefined) {
-                    this.worlds[k].stop();
-                }
+            if (this.world !== undefined && this.world.stop !== undefined) {
+                this.world.stop();
             }
         }
     };
