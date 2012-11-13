@@ -79,8 +79,9 @@ define(function(require) {
         // Process one frame of behavior.
         tick: function() {
             for (var k = this.worlds.length - 1; k >= 0; k--) {
-                this.worlds[k].tick();
-                if (this.worlds[k].block_tick) break;
+                var world = this.worlds[k];
+                world.tick();
+                if (world.block_tick) break;
             }
             this.kb.tick();
         },
@@ -96,8 +97,9 @@ define(function(require) {
             this.ctx.restore();
 
             for (var k = 0; k < this.worlds.length; k++) {
-                this.worlds[k].render(this.ctx);
-                if (this.worlds[k].block_render) break;
+                var world = this.worlds[k];
+                world.render(this.ctx);
+                if (world.block_render) break;
             }
         },
 
