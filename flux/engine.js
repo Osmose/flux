@@ -102,14 +102,14 @@ define(function(require) {
         },
 
         pushWorld: function(world, block_tick, block_render) {
-            this.worlds.push(world);
+            this.worlds.unshift(world);
             world.engine = this;
             if (block_tick !== undefined) world.block_tick = block_tick;
             if (block_render !== undefined) world.block_render = block_render;
         },
 
         popWorld: function() {
-            var world = this.worlds.pop();
+            var world = this.worlds.shift();
             world.engine = null;
             return world;
         },
@@ -131,9 +131,10 @@ define(function(require) {
             if (!this.running) {
                 this.running = true;
 
-                if (this.world !== undefined &&
-                    this.world.start !== undefined) {
-                    this.world.start();
+                for (var k = 0; k < this.worlds.length; k++) {
+                    if (this.worlds[k].start !== undefined) {
+                        this.worlds[k].start();
+                    }
                 }
                 this.loop();
             }
@@ -142,8 +143,10 @@ define(function(require) {
         // Stop the game.
         stop: function() {
             this.running = false;
-            if (this.world !== undefined && this.world.stop !== undefined) {
-                this.world.stop();
+            for (var k = 0; k < this.worlds.length; k++) {
+                if (this.worlds[k].stop !== undefined) {
+                    this.worlds[k].stop();
+                }
             }
         }
     };
