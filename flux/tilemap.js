@@ -14,14 +14,15 @@ define(function(require) {
 
     Tilemap.prototype = {
         render: function(ctx, x, y) {
-            var camera = this.engine.camera;
             if (this.graphic === null) return;
             x = x || this.x;
             y = y || this.y;
 
             // Adjust for camera.
-            x -= camera.x;
-            y -= camera.y;
+            if (this.engine) {
+                x -= this.engine.camera.x;
+                y -= this.engine.camera.y;
+            }
 
             for (var ty = 0; ty < this.grid.length; ty++) {
                 for (var tx = 0; tx < this.grid[ty].length; tx++) {
