@@ -89,6 +89,11 @@ define(function(require) {
         renderTile: function(ctx, tile, x, y) {
             tile = this.getTileNumber(tile);
 
+            // If tile is negative (probably an empty tile), drop out.
+            if (tile < 0) {
+                return;
+            }
+
             var ty = Math.floor(tile / this.tileColumns);
             var tx = tile % this.tileColumns;
             var sourceX = (tx * this.tileWidth) + (tx * this.xGap);
