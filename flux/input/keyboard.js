@@ -30,7 +30,7 @@ define(function(require) {
         for (var k = 48; k < 91; k++) {
             this[String.fromCharCode(k).toUpperCase()] = k;
         }
-    };
+    }
 
     Keyboard.prototype = {
         letter: function(l) {
@@ -75,8 +75,17 @@ define(function(require) {
         },
 
         tick: function() {
-            this._pressed = {};
-            this._released = {};
+            for (var k in this._pressed) {
+                if (this._pressed.hasOwnProperty(k)) {
+                    this._pressed[k] = false;
+                }
+            }
+
+            for (var j in this._released) {
+                if (this._released.hasOwnProperty(j)) {
+                    this._released[j] = false;
+                }
+            }
         }
     };
 
