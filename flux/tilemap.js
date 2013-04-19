@@ -1,7 +1,7 @@
 define(function(require) {
     function Tilemap(grid, x, y) {
         this.grid = grid;
-        this.graphic = null;
+        this._graphic = null;
 
         this.x = x || 0;
         this.y = y || 0;
@@ -10,11 +10,21 @@ define(function(require) {
 
         // Format: Type => Array of tile numbers
         this.solid = {};
+
+        this.cacheCanvas = document.createElement('canvas');
+        this.cacheCtx = this.cacheCanvas.getContext('2d');
+        this._invalidateCache = true;
     }
 
     Tilemap.prototype = {
         render: function(ctx, x, y) {
             if (this.graphic === null) return;
+
+            if (this._invalidateCache) {
+                this._updateCache();
+                this._invalidateCache = false;
+            }
+
             x = x || this.x;
             y = y || this.y;
 
@@ -24,13 +34,32 @@ define(function(require) {
                 y -= this.engine.camera.y;
             }
 
+            ctx.drawImage(this.cacheCanvas, x, y);
+        },
+
+        _updateCache: function() {
+            this.cacheCanvas.width = this.widthTiles * this.graphic.tileWidth;
+            this.cacheCanvas.height = this.heightTiles * this.graphic.tileWidth;
+            this.cacheCtx.clearRect(0, 0, this.cacheCanvas.width, this.cacheCanvas.height);
             for (var ty = 0; ty < this.grid.length; ty++) {
                 for (var tx = 0; tx < this.grid[ty].length; tx++) {
-                    this.graphic.renderTile(ctx, this.grid[ty][tx],
-                                    x + (tx * this.graphic.tileWidth),
-                                    y + (ty * this.graphic.tileHeight));
+                    this.graphic.renderTile(
+                        this.cacheCtx,
+                        this.grid[ty][tx],
+                        tx * this.graphic.tileWidth,
+                        ty * this.graphic.tileHeight
+                    );
                 }
             }
+        },
+
+        get graphic() {
+            return this._graphic;
+        },
+
+        set graphic(g) {
+            this._graphic = g;
+            this._invalidateCache = true;
         },
 
         collideEntity: function(entity, type, dx, dy) {
